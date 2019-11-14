@@ -78,30 +78,39 @@ void loop() {
   // Wait for RFID
   rfid_wait();
 
+
   // Load Preferences from RFID
   init_user_info();  // Init to 0.
+
+  
   rfid_load();
+
 
   // Program New Cup
   if (0) {
     rfid_program("Alex"); // Names longer than 16 chars will be automatically truncated.
   }
 
+
   // User Inputs for changes to prefences
   button_press();
+
 
   // Save preferences to RFID
   rfid_save(); 
 
+
   // Halt RFID
   rfid_halt();
+
+  
   // Control Motors to dispense
   dispense();
 
 
-  while (1) { // debug
-    delay(1000);
-  }
+  //while (1) { // debug
+    //delay(1000);
+  //}
 
 
 
@@ -262,11 +271,11 @@ byte button_press() {
     switch_val_Sugars = digitalRead(Pin_Sugars); // Reads sugar switch
     if (switch_val_Sugar_prev == SwitchOFF && switch_val_Sugars == SwitchON) {
       user_info.preferred_num_sugars += 1;
-      Serial.println(user_info.preferred_num_sugars);
+      
       if (user_info.preferred_num_sugars > 3) { // Wrap around sugar
         user_info.preferred_num_sugars = 0;
       }
-
+      Serial.println(user_info.preferred_num_sugars);
       lcd_show_pref();
 
     }
@@ -279,10 +288,12 @@ byte button_press() {
     switch_val_Creams = digitalRead(Pin_Creams); // Reads cream switch
     if (switch_val_Cream_prev == SwitchOFF && switch_val_Creams == SwitchON) {
       user_info.preferred_num_creams += 1;
-      Serial.println(user_info.preferred_num_creams);
       if (user_info.preferred_num_creams > 3) { // Wrap around cream
         user_info.preferred_num_creams = 0;
       }
+
+            Serial.println(user_info.preferred_num_creams);
+
 
       lcd_show_pref();
 
@@ -305,7 +316,7 @@ byte button_press() {
 
 byte rfid_halt(){
   mfrc522.PICC_HaltA();       // Stop the RFID tag
-  mfrc522.PCD_StopCrypto1();  // Stop the encryption on RFID reader
+  // mfrc522.PCD_StopCrypto1();  // Stop the encryption on RFID reader
   Serial.println("Finished.");
 }
 
@@ -430,8 +441,8 @@ void dispense() {
   byte PWM_c = 255; // Controls the pwm (value between 0 to 255) Cream
 
   // Calculate the total time to dispense
-  user_info.preferred_num_sugars = 1; // debug
-  user_info.preferred_num_creams = 1; // debug
+  // user_info.preferred_num_sugars = 1; // debug
+  // user_info.preferred_num_creams = 1; // debug
   short ts_total = ts_1 * user_info.preferred_num_sugars;
   short tc_total = tc_1 * user_info.preferred_num_creams;
 
