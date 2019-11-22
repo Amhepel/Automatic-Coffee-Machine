@@ -1,4 +1,4 @@
-// 07_MotorControl Turn on and off the motors for liquid dispensing
+// 08_CoffeeMaker Turn on and off the motors for liquid dispensing
 // Using pins 5,6 as output pins to control motors
 
 // Global Declarations
@@ -29,8 +29,8 @@ LiquidCrystal_PCF8574 lcd(0x27); // Instantiate the lcd as a global object and s
 #define SwitchOFF HIGH
 
 ////// For dispense()
-const byte MC_1 = 5; // Pin 5 PWM
-const byte MC_2 = 6; // Pin 6 PWM
+const byte MC_1 = 5; // Pin 5 PWM //Sugar
+const byte MC_2 = 6; // Pin 6 PWM // Cream
 
 ///// User Info
 struct USER_INFO {  // To simplify implementation, lets make this in multiples of 16 bytes (RFID blocks).
@@ -62,6 +62,19 @@ void setup() {
   //delay(2000);
   lcd.clear();
 
+  lcd.setCursor(0,0); lcd.print("Bootup: ");
+  delay(250);
+  lcd.setCursor(8,0); lcd.print("1");
+  delay(250);
+  lcd.setCursor(9,0); lcd.print(",2");
+  delay(250);
+  lcd.setCursor(11,0); lcd.print(",3");
+  delay(250);
+  lcd.setCursor(13,0); lcd.print(",4");
+  delay(1000);
+  lcd.clear();
+  //lcd.setCursor(0,0); lcd.print("Place cup here");
+
   // For Buttons
   pinMode(Pin_Sugars, INPUT_PULLUP); // Links Button to Pin_Sugar
   pinMode(Pin_Ok, INPUT_PULLUP); // Links Button to Pin_Ok
@@ -91,6 +104,8 @@ void loop() {
     rfid_program("Alex"); // Names longer than 16 chars will be automatically truncated.
   }
 
+  // Welcome message
+  welcome_msg();
 
   // User Inputs for changes to prefences
   button_press();
@@ -117,6 +132,8 @@ void loop() {
 } // End of loop
 
 byte rfid_wait() {
+  lcd.clear();
+  lcd.setCursor(0,0); lcd.print("Place cup here");
   while (1) {
     if ( ! mfrc522.PICC_IsNewCardPresent()) // If no card present,
       continue;  // Keep looping, else proceed below
@@ -219,6 +236,20 @@ byte rfid_load() {
 
 
 
+void lcd_boot_up(){
+  
+}
+
+void welcome_msg(){
+    // Display name
+  lcd.clear();
+  lcd.setCursor(0,0); lcd.print("Welcome");
+  lcd.setCursor(0,1); lcd.print(user_info.name_chars);
+  lcd.setCursor(9,2); lcd.print("^_^");
+  
+  delay(5000);
+}
+
 void lcd_show_pref(){  // Show preferences stored in global user_info onto LCD
   // Check for errors
   if(user_info.preferred_num_sugars > 3){
@@ -234,9 +265,10 @@ void lcd_show_pref(){  // Show preferences stored in global user_info onto LCD
     Serial.println("Error: Creams can't be negative on display");
   }
 
+
   // Display preferences
   lcd.clear();
-  
+
   // Write column of numbers 0,1,2,3 in center of screen
   int x_mid = 10;
   
@@ -435,7 +467,7 @@ void delay_message(char *chars, byte count) {
 
 void dispense() {
 
-  short ts_1 = 1000; // Time to dispense one sugar
+  short ts_1 = 4000; // Time to dispense one sugar
   short tc_1 = 2000; // Time to dispense one cream
   byte PWM_s = 255; // Controls the pwm (value between 0 to 255) Sugar
   byte PWM_c = 255; // Controls the pwm (value between 0 to 255) Cream
