@@ -348,7 +348,7 @@ byte button_press() {
 
 byte rfid_halt(){
   mfrc522.PICC_HaltA();       // Stop the RFID tag
-  // mfrc522.PCD_StopCrypto1();  // Stop the encryption on RFID reader
+  mfrc522.PCD_StopCrypto1();  // Stop the encryption on RFID reader
   Serial.println("Finished.");
 }
 
