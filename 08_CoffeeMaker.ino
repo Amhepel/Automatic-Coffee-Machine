@@ -101,7 +101,7 @@ void loop() {
 
   // Program New Cup
   if (0) {
-    rfid_program("Alex"); // Names longer than 16 chars will be automatically truncated.
+    rfid_program("Ryan"); // Names longer than 16 chars will be automatically truncated.
   }
 
   // Welcome message
@@ -247,7 +247,7 @@ void welcome_msg(){
   lcd.setCursor(0,1); lcd.print(user_info.name_chars);
   lcd.setCursor(9,2); lcd.print("^_^");
   
-  delay(5000);
+  delay(2000);
 }
 
 void lcd_show_pref(){  // Show preferences stored in global user_info onto LCD
@@ -467,8 +467,8 @@ void delay_message(char *chars, byte count) {
 
 void dispense() {
 
-  short ts_1 = 4000; // Time to dispense one sugar
-  short tc_1 = 2000; // Time to dispense one cream
+  short ts_1 = 11000; // Time to dispense one sugar 15ml
+  short tc_1 = 11000; // Time to dispense one cream 15ml
   byte PWM_s = 255; // Controls the pwm (value between 0 to 255) Sugar
   byte PWM_c = 255; // Controls the pwm (value between 0 to 255) Cream
 
